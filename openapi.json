@@ -1,0 +1,383 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "ESPHome API Connector",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/devices": {
+            "get": {
+                "summary": "List Devices",
+                "operationId": "list_devices_devices_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/DeviceSummary"
+                                    },
+                                    "type": "array",
+                                    "title": "Response List Devices Devices Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Register Device",
+                "operationId": "register_device_devices_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeviceSummary"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/devices/{device_id}": {
+            "delete": {
+                "summary": "Unregister Device",
+                "operationId": "unregister_device_devices__device_id__delete",
+                "parameters": [
+                    {
+                        "name": "device_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Device Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MessageResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/devices/{device_id}/entities": {
+            "get": {
+                "summary": "Get Entities",
+                "operationId": "get_entities_devices__device_id__entities_get",
+                "parameters": [
+                    {
+                        "name": "device_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Device Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeviceEntities"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/devices/{device_id}/entities/{object_id}": {
+            "get": {
+                "summary": "Get Entity",
+                "operationId": "get_entity_devices__device_id__entities__object_id__get",
+                "parameters": [
+                    {
+                        "name": "device_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Device Id"
+                        }
+                    },
+                    {
+                        "name": "object_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Object Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EntityValue"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "DeviceEntities": {
+                "properties": {
+                    "device_id": {
+                        "type": "string",
+                        "title": "Device Id"
+                    },
+                    "connected": {
+                        "type": "boolean",
+                        "title": "Connected"
+                    },
+                    "entities": {
+                        "additionalProperties": {
+                            "$ref": "#/components/schemas/EntityValue"
+                        },
+                        "type": "object",
+                        "title": "Entities"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "device_id",
+                    "connected",
+                    "entities"
+                ],
+                "title": "DeviceEntities"
+            },
+            "DeviceSummary": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Id"
+                    },
+                    "connected": {
+                        "type": "boolean",
+                        "title": "Connected"
+                    },
+                    "entity_count": {
+                        "type": "integer",
+                        "title": "Entity Count"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "connected",
+                    "entity_count"
+                ],
+                "title": "DeviceSummary"
+            },
+            "EntityValue": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Type"
+                    },
+                    "value": {
+                        "title": "Value"
+                    },
+                    "unit": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Unit"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "type",
+                    "value"
+                ],
+                "title": "EntityValue"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "MessageResponse": {
+                "properties": {
+                    "detail": {
+                        "type": "string",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "detail"
+                ],
+                "title": "MessageResponse"
+            },
+            "RegisterRequest": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "title": "Id",
+                        "examples": [
+                            "greenhouse"
+                        ]
+                    },
+                    "address": {
+                        "type": "string",
+                        "title": "Address",
+                        "examples": [
+                            "esp-movimento.local"
+                        ]
+                    },
+                    "api_key": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Api Key",
+                        "examples": [
+                            "ZcNzgkp3P3Zk0tX3Z1bjB961UxOZ0GU0JpueBy2obtc"
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "address"
+                ],
+                "title": "RegisterRequest"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    },
+                    "input": {
+                        "title": "Input"
+                    },
+                    "ctx": {
+                        "type": "object",
+                        "title": "Context"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}
